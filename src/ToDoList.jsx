@@ -2,31 +2,50 @@ import React, { useState } from 'react'
 
 function ToDoList() {
 
-    const [tasks, setTasks] = useState(["Eat", "Walk"]);
-    const [newTask, seNewTask] = useState("");
+    const [tasks, setTasks] = useState(["Eat", "Walk", "Shower"]);
+    const [newTask, setNewTask] = useState("");
 
     // this function is for textbox when we type something
     function handleInputChange(event) {
-        seNewTask(event.target.value); //this allows to show what ur input is on the text box (enter a task... )
+        setNewTask(event.target.value); //this allows to show what ur input is on the text box (enter a task... )
     }
 
     // ADD
     function addTask() {
 
+        if (newTask.trim() !== "") {
+            setTasks(t => [... t, newTask]);
+            setNewTask("");
+        }
+        
     }
 
     // DELETE
-    function deletetask(index) {
-
+    function deleteTask(index) {
+        const updatedTasks = tasks.filter((_, i) => i !== index)
+        setTasks(updatedTasks);
+    
     }
 
     // MOVE TASK UP
     function moveTaskUp(index) {
+        if (index > 0) {
+            const updatedTasks = [...tasks];
+            [updatedTasks[index], updatedTasks[index-1]] = 
+            [updatedTasks[index-1], updatedTasks[index]];
+            setTasks(updatedTasks);
+        } // this will swap two elements within an array (deconstruction)
 
     }
 
     // MOVE TASK DOWN
     function moveTaskDown(index) {
+        if (index < tasks.length - 1) {
+            const updatedTasks = [...tasks];
+            [updatedTasks[index], updatedTasks[index+1]] = 
+            [updatedTasks[index+1], updatedTasks[index]];
+            setTasks(updatedTasks);
+        } 
 
     }
 
@@ -45,7 +64,10 @@ function ToDoList() {
             {tasks.map((task, index) => 
             <li key={index}>
                 <span className="text">{task}</span>
-                <button className="delete-button" onclick={() => deletetask(index)}>Delete</button>
+                <button className="delete-button" onClick={() => deleteTask(index)}>Delete</button>
+                <button className="move-button" onClick={() => moveTaskUp(index)}>Move Task Up</button>
+                <button className="move-button" onClick={() => moveTaskDown(index)}>Move Task Down</button>
+           
             </li>)}
 
         </ol>
